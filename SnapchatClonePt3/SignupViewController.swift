@@ -40,6 +40,19 @@ class SignupViewController: UIViewController, UITextFieldDelegate {
         guard let name = nameField.text else { return }
         
         // YOUR CODE HERE
+        
+        FIRAuth.auth()?.createUser(withEmail: email, password: password, completion: {
+            (user, error) in
+            if (error != nil) {
+                let alert = UIAlertController(title: "Invalid email or password", message: "Please try again", preferredStyle: UIAlertControllerStyle.alert)
+                alert.addAction(UIAlertAction(title: "Dismiss", style: UIAlertActionStyle.default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+            } else {
+                user?.profileChangeRequest().displayName = name
+                self.performSegue(withIdentifier: "signupToMain", sender: self)
+            }
+        })
+        
     }
 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
